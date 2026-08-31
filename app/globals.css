@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/*
+  3D Interactive Virtual Tours - design system
+  Single locked theme: deep navy ground, ivory type, rationed metallic gold.
+  Hierarchy comes from photography, contrast, type scale and negative space.
+*/
+
+@theme {
+  /* Ground */
+  --color-ink: #07111f;
+  --color-ink-deep: #050c17;
+  --color-surface: #0d1b2a;
+  --color-surface-raised: #12253a;
+
+  /* Accent (rationed) */
+  --color-gold: #c9a45c;
+  --color-gold-light: #e2c98a;
+
+  /* Type */
+  --color-ivory: #f4f0e8;
+  --color-muted: #93a5ba;
+  --color-muted-dim: #6b7f96;
+
+  /* Lines */
+  --color-line: #1c2c40;
+  --color-line-strong: #2a3d55;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Editorial type scale */
+  --text-display-xl: clamp(2.75rem, 7.2vw, 6.5rem);
+  --text-display-xl--line-height: 0.94;
+  --text-display-xl--letter-spacing: -0.03em;
+
+  --text-hero: clamp(2.1rem, 4.8vw, 4.3rem);
+  --text-hero--line-height: 0.98;
+  --text-hero--letter-spacing: -0.028em;
+
+  --text-display: clamp(1.9rem, 3.9vw, 3.5rem);
+  --text-display--line-height: 0.96;
+  --text-display--letter-spacing: -0.028em;
+
+  --text-display-sm: clamp(1.75rem, 3.6vw, 3rem);
+  --text-display-sm--line-height: 1.02;
+  --text-display-sm--letter-spacing: -0.02em;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.12em;
+
+  /* Radius rule for the whole project:
+     images 12px, pills for interactive controls, 0 for inputs (hairline only). */
+  --radius-image: 12px;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold-light);
+  outline-offset: 3px;
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 768px) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 1280px) {
+    padding-inline: 4rem;
+  }
+}
+
+@utility label {
+  font-size: var(--text-label);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Photographic scrim: keeps ivory type at AAA over architectural imagery */
+@utility scrim-bottom {
+  background: linear-gradient(
+    to top,
+    rgb(5 12 23 / 0.94) 0%,
+    rgb(5 12 23 / 0.72) 34%,
+    rgb(5 12 23 / 0.28) 66%,
+    rgb(5 12 23 / 0.1) 100%
+  );
+}
+
+/* Keeps the transparent header legible over bright daylight photography. */
+@utility scrim-top {
+  background: linear-gradient(
+    to bottom,
+    rgb(5 12 23 / 0.78) 0%,
+    rgb(5 12 23 / 0.42) 46%,
+    rgb(5 12 23 / 0) 100%
+  );
+}
+
+@utility scrim-flat {
+  background: rgb(5 12 23 / 0.62);
+}
