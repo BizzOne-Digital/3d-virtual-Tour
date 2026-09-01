@@ -36,7 +36,7 @@ export function FeaturedProperty() {
             </Reveal>
             <Reveal index={2}>
               <div className="mt-10">
-                <UnderlineLink href={cta.portfolio.href}>
+                <UnderlineLink href={cta.services.href}>
                   {fp.ctaLabel}
                 </UnderlineLink>
               </div>
@@ -48,9 +48,9 @@ export function FeaturedProperty() {
             className="lg:col-span-4 lg:col-start-9 lg:justify-self-end lg:text-right"
           >
             <dl className="border-t border-gold/40 pt-6">
-              <dt className="label text-muted-dim">Property</dt>
+              <dt className="label text-muted-dim">Location</dt>
               <dd className="mt-2 text-sm text-ivory">{fp.location}</dd>
-              <dt className="label mt-6 text-muted-dim">Discipline</dt>
+              <dt className="label mt-6 text-muted-dim">Delivered</dt>
               <dd className="mt-2 text-sm text-ivory">{fp.discipline}</dd>
             </dl>
           </Reveal>

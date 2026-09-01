@@ -1,48 +1,30 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
-  /** Stagger index, in case several siblings reveal in sequence. */
+  /** Stagger position among siblings. Shifts the scroll range, not a delay. */
   index?: number;
-  /** Vertical travel in px. Kept small: this is a settle, not an entrance show. */
-  distance?: number;
   className?: string;
-  as?: "div" | "li" | "section" | "figure" | "article";
+  as?: "div" | "li" | "section" | "figure" | "article" | "ol" | "ul";
 };
 
 /**
  * Scroll settle used for section entrances.
- * Motivation: sequences content so a section reads top-down on arrival.
- * Collapses to static under prefers-reduced-motion.
+ *
+ * A server component: the animation lives entirely in the `.reveal` class in
+ * globals.css, driven by the browser's own view timeline. See the comment
+ * there for why this is not a Motion component. The short version is that a
+ * JS-driven `initial: { opacity: 0 }` gets server-rendered, so the page shipped
+ * blank and stayed blank until hydration.
+ *
+ * The API is unchanged from the Motion version, so callers did not have to
+ * move.
  */
-export function Reveal({
-  children,
-  index = 0,
-  distance = 20,
-  className,
-  as = "div",
-}: RevealProps) {
-  const reduce = useReducedMotion();
-  const Tag = motion[as];
-
+export function Reveal({ children, index = 0, className, as: Tag = "div" }: RevealProps) {
   return (
     <Tag
-      className={className}
-      /* `initial` must not depend on the reduced-motion hook: the server cannot
-         know the user preference, and a branched initial state hydrates as a
-         mismatch that React refuses to patch, leaving content invisible.
-         Reduced motion is honored by collapsing the transition instead. */
-      initial={{ opacity: 0, y: distance }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{
-        duration: reduce ? 0 : 0.75,
-        delay: reduce ? 0 : index * 0.07,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+      className={className ? `reveal ${className}` : "reveal"}
+      style={index ? ({ "--i": index } as React.CSSProperties) : undefined}
     >
       {children}
     </Tag>

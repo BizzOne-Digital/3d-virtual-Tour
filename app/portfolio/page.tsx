@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { PortfolioGrid } from "@/components/Portfolio";
 import { CTA } from "@/components/CTA";
+import { CoverageGallery } from "@/components/CoverageGallery";
 import { pageHeroes } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Portfolio",
   description:
-    "Selected real estate photography, aerial coverage and 3D interactive virtual tour projects across Central Florida.",
+    "Worked examples by service: photography, aerial coverage, 3D dollhouse models, floor plans, virtual staging and listing video for Florida properties.",
   alternates: { canonical: "/portfolio" },
   openGraph: {
     title: "Portfolio | 3D Interactive Virtual Tours",
     description:
-      "Selected real estate photography, aerial coverage and 3D interactive virtual tour projects.",
+      "Worked examples by service: photography, aerial, 3D tours, floor plans, staging and video.",
     url: "/portfolio",
   },
 };
@@ -21,8 +22,8 @@ export default function PortfolioPage() {
   return (
     <>
       <PageHero
-        title="Properties, presented differently."
-        copy="A selection of residential work across photography, aerial coverage and interactive walkthroughs."
+        title="Work, by the service that produced it."
+        copy="Each piece below names what was commissioned and what the agent received. Every frame is our own work on a Florida property."
         image={pageHeroes.portfolio.src}
         alt={pageHeroes.portfolio.alt}
       />
@@ -31,9 +32,11 @@ export default function PortfolioPage() {
         <PortfolioGrid />
       </section>
 
+      <CoverageGallery />
+
       <CTA
         title="Your listing could be next."
-        copy="Send the property details and we will put together the right coverage for it."
+        copy="Send the address and the square footage. We will come back with the coverage it needs and what it costs."
       />
     </>
   );

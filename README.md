@@ -21,80 +21,123 @@ app/
   api/contact/route.ts    form endpoint (delivery not wired, see below)
   opengraph-image.tsx     share card
   sitemap.ts  robots.ts  not-found.tsx
-components/               Header, Footer, Hero, PageHero, Intro, Services,
-                          Technology, FeaturedProperty, Portfolio,
-                          PortfolioSection, WhyUs, CTA, ContactForm,
-                          SectionLabel, ActionLink, Reveal
-lib/content.ts            all copy, contact details and image references
+components/               Header, Footer, Hero, PageHero, Intro,
+                          ServiceCategories, SeeItInAction, ServiceBlock,
+                          ServiceIndex, ServiceExample, BeforeAfter, Pricing,
+                          Technology, FilmBand, FeaturedProperty, Portfolio,
+                          CoverageGallery, WhyUs, Credentials, CTA,
+                          ContactForm, SectionLabel, ActionLink, Reveal
+lib/content.ts            business details, copy, imagery, portfolio
+lib/services.ts           the service catalogue and published pricing
 ```
 
 ## Editing content
 
-Everything a non-developer would want to change lives in `lib/content.ts`:
-business details, navigation, CTA labels, services, portfolio projects, value
-props and the approach steps. Components read from it, so copy changes do not
-touch layout code.
+Everything a non-developer would want to change lives in two files. Components
+read from them, so copy and imagery changes never touch layout code.
+
+**`lib/services.ts`** is the service catalogue, and it is where most edits will
+happen. Each service is one object answering three questions in a fixed order:
+what it is (`summary`), why it matters (`value`), and what it looks like
+(`example`). Categories group them; the services page and the homepage overview
+both render straight off this array, as does the jump nav and every count shown
+on the site. To add a service, add an object. To reorder, move it. To
+re-illustrate it, change one `img(...)` line.
+
+The `example` field is a tagged union, so a service can prove itself in
+whichever way suits it without any layout work:
+
+| `kind` | Renders as |
+| --- | --- |
+| `gallery` | Contact-sheet grid, lead frame full width |
+| `before-after` | Draggable comparison slider |
+| `image` | One frame, contained, with an optional caption |
+| `tour` | A live interactive tour, running in the page |
+| `film` | A YouTube facade that plays in place |
+| `checklist` | The deliverable set as type, for process work |
+
+`pricing` at the bottom of the same file holds the published rates. Every figure
+appears exactly once.
+
+**`lib/content.ts`** holds the business details, navigation, CTA labels, hero,
+the live tours and films, the homepage proof strip, the portfolio, the
+room-by-room coverage index and the page heroes.
+
+### The imagery rule
+
+Every photograph on this site is the studio's own work on a real Florida
+property. That is a constraint worth keeping. The site this replaced was built
+on stock: its hero poster was a German baroque palace captioned as a Winter
+Haven farmhouse, the real-estate-photography example was the Jaipur City Palace,
+and a Lakeland "residential interior" was the Royal Opera House in Muscat. The
+client's note that started this rebuild read "a lot of photos / Mansions not a
+Florida home. Where are all my services and examples of them?" and it was
+correct on both counts.
+
+Before adding an image, the test is: does this show what the studio does for a
+client? If not, it does not belong here, however good it looks.
 
 ## Media
 
-All photography and the hero film live in `public/Images` and are referenced from
-`lib/content.ts` through the `photo()` helper. Nothing is loaded from a remote
-host.
+All photography lives in `public/Images` and is referenced from `lib/content.ts`
+and `lib/services.ts` through the `photo()` and `img()` helpers. Nothing is
+loaded from a remote host. Filenames carry their role, so a placement is
+findable by grep:
 
-| File | Placement |
+| Prefix | Contents |
 | --- | --- |
-| `hvideo.mp4` | Home hero background (1920x1080, 11.6s, silent, desktop only) |
-| `h3.jpg` | Hero poster and mobile hero still, plus Fairview Farmhouse |
-| `h16.jpg` | Home introduction frame |
-| `h11.jpg` | Service 01, virtual tours |
-| `h7.jpg` | Service 02, photography |
-| `h2.jpg` | Service 03, property marketing |
-| `h5.jpg` | Service 04, immersive experiences, and portfolio page hero |
-| `h13.jpg` | Technology band |
-| `h10.jpg` | Featured property |
-| `h17.jpg` | Pinecrest Retreat |
-| `h1.jpg` | Cantilever House |
-| `h6.jpg` | Willow Porch Cottage |
-| `h9.jpg` | Ridgeline House and About page band |
-| `h8.jpg` | The Magnolia, the one interior in the set |
-| `h18.jpg` | Terrace House |
-| `h4.jpg` | Belvedere Villa |
-| `h15.jpg` | Services page hero |
-| `h14.jpg` | About page hero |
-| `h12.jpg` | Unused. At 225x225 it is too small for any frame on the site. |
+| `ext-*` | Exteriors: elevations, pool, lanai, patio, garage |
+| `int-*` | Interiors, by room: kitchen, living, dining, bed, bath |
+| `ex-*` | Service examples: the frame that proves one service |
+| `film-*` | Poster stills for the YouTube listing films |
+| `tour-*` | Poster stills for the live interactive tours |
+| `badge-*` | Zillow Certified and Google Trusted marks |
 
 ### Media notes
 
-**1. Still resolution.** The video is full HD, but the stills top out at 734x418
-and several are near 250px. Next.js will not upscale, so full-bleed desktop
-bands are filled with an image roughly a third of the width they need and look
-soft on a large screen. The layouts are built for 2400px originals. Re-export
-the same photographs at 2400px on the long edge, keep the filenames, and the
-site sharpens with no code change.
+**1. Source resolution.** The studio's frames are web-resolution listing
+photography: most are 1296x864, the largest exterior is 1296 wide. The layouts
+are built around that on purpose. Nothing is full-bleed at desktop, because
+stretching a 1296px frame across a 2560px viewport makes good photography look
+soft. If higher-resolution originals turn up, keep the filenames and drop them
+in; the layouts will take the extra detail without a code change.
 
-**2. Video faststart is done.** The hero film had its `moov` atom at the end of
-the file, so a browser had to buffer most of 15MB before showing a frame. It has
-been remuxed in place: `moov` now sits at byte 40, so a player has the index
-after ~4.5KB. The byte count is unchanged and nothing was re-encoded.
+**2. The hero film.** `hero.mp4` plays full-bleed behind the hero type, muted
+and looping, with `hero-poster.jpg` (a frame from the film itself) painting
+first. It runs 11.6s, past the WCAG 2.2.2 five-second threshold for
+auto-playing motion, so it carries a real pause control rather than an optional
+one, and it does not autoplay at all under `prefers-reduced-motion`.
 
-- `hvideo.mp4` is the faststart version, in use by the site.
-- `hvideo-original.mp4` is your untouched original, kept as a backup.
-- `scripts/faststart.py` does the remux with no ffmpeg dependency. If you ever
-  replace the film, run it again:
+Two things to know about the file:
 
-```bash
-python scripts/faststart.py public/Images/hvideo.mp4 public/Images/hvideo-fast.mp4
-```
+- **It is watermarked licensed stock, and its subject is a Norwegian barn.** The
+  supplier watermark sits across the centre of frame, and the clip is a red
+  timber barn on a mountain slope, not a Florida property. Every other image on
+  this site is the studio's own work. Replacing this one is a one-line change to
+  `hero.video` in `lib/content.ts` plus a new poster frame:
 
-**Still 15MB, though.** Faststart fixes when playback starts, not how much data
-the visitor pulls, and the film now autoplays on phones too. Cutting it to 6 to
-8 seconds at around 3Mbps would land under 4MB. That needs a real encoder:
+  ```bash
+  ffmpeg -ss 0.4 -i public/Images/hero.mp4 -frames:v 1 -vf scale=1920:-2 -q:v 6 public/Images/hero-poster.jpg
+  ```
 
-```bash
-ffmpeg -i public/Images/hvideo-original.mp4 -t 8 -b:v 3M -an -movflags +faststart public/Images/hvideo.mp4
-```
+- **It is 15MB.** The `moov` atom has been moved to the front of the file
+  (`-movflags +faststart`), so playback starts after roughly 4.5KB instead of
+  buffering most of the file, and the server answers with range requests. That
+  fixes *when* playback starts, not how much data a visitor pulls. Cutting it to
+  eight seconds at 3Mbps lands it under 4MB with no visible loss at this scale:
 
-ffmpeg is not installed on this machine. `winget install Gyan.FFmpeg` adds it.
+  ```bash
+  ffmpeg -i public/Images/hero.mp4 -t 8 -b:v 3M -an -movflags +faststart public/Images/hero-small.mp4
+  ```
+
+**3. Two before/after pairs are genuine, one service still needs one.** The
+virtual staging slider is two frames of the same room from the studio's own
+staging sample, and the enhancement slider is a real correction pair. Virtual
+twilight is listed and priced but shares the enhancement example rather than
+having its own, because no usable twilight pair exists in the current material.
+A daytime exterior and its twilight conversion, same frame, would complete it:
+add them as a `before-after` example on the `photo-enhancement` service, or
+split twilight into its own service object.
 
 ## One thing to do before launch
 
@@ -112,5 +155,11 @@ Tokens live in `app/globals.css` under `@theme`. One locked dark theme.
 - Ivory `#f4f0e8` for type, muted blue-grays for supporting copy
 - Geist via `next/font`, uppercase display headings, uppercase labels at 0.12em
 - Radius rule: 12px on image containers, full pill on interactive controls, no radius on inputs (hairline underline only)
-- Every text pair passes WCAG AA (lowest measured 4.6:1, primary CTA 8.1:1)
+- Every text pair passes WCAG AA. 132 distinct text and background combinations
+  were measured across all five pages with zero failures. The lowest body-text
+  ratio is 5.3:1; the one 4.4:1 pair is a 30px display numeral, where the
+  requirement is 3:1. The primary CTA is 8.1:1
+- Scroll reveals are CSS, driven by `animation-timeline: view()`. Content is
+  visible by default and the reveal is an enhancement, so nothing on the page
+  depends on JavaScript to be readable
 - All motion respects `prefers-reduced-motion`

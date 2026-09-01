@@ -1,4 +1,5 @@
 import { ActionLink } from "@/components/ActionLink";
+import { cta } from "@/lib/content";
 
 export default function NotFound() {
   return (
@@ -8,10 +9,10 @@ export default function NotFound() {
         This page has moved on.
       </h1>
       <p className="mt-8 max-w-[44ch] text-base leading-relaxed text-muted md:text-lg">
-        The link may be out of date. The portfolio is the best place to start.
+        The link may be out of date. The service list is the best place to start.
       </p>
       <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-        <ActionLink href="/portfolio">View Portfolio</ActionLink>
+        <ActionLink href={cta.services.href}>{cta.services.label}</ActionLink>
         <ActionLink href="/" variant="outline" icon="none">
           Back home
         </ActionLink>

@@ -24,18 +24,19 @@ export default function ContactPage() {
           <div className="lg:sticky lg:top-32">
             <Reveal>
               <h1 className="max-w-[16ch] text-display font-medium uppercase text-ivory">
-                Let&rsquo;s present your property differently.
+                Tell us about the property.
               </h1>
             </Reveal>
             <Reveal index={1}>
               <p className="mt-8 max-w-[46ch] text-base leading-relaxed text-muted md:text-lg">
-                Tell us about your property and we will help you choose the right
-                visual marketing solution.
+                Send the address, the square footage and when it lists. We will
+                come back with the coverage it needs and what it costs.
               </p>
             </Reveal>
             <Reveal index={2}>
               <address className="mt-12 flex flex-col gap-3 border-t border-line pt-8 not-italic">
                 <span className="label text-gold">{business.contactName}</span>
+                <span className="text-sm text-muted-dim">{business.contactTitle}</span>
                 <a
                   href={`mailto:${business.email}`}
                   className="text-base text-ivory transition-colors duration-300 hover:text-gold"

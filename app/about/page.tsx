@@ -8,12 +8,12 @@ import { approach, business, pageHeroes } from "@/lib/content";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "3D Interactive Virtual Tours is a real estate photography and visual marketing studio built around architectural detail and immersive property presentation.",
+    "James Aguilar is a Zillow Certified and Google Trusted real estate photographer serving Winter Haven and Central Florida with photography, aerial, 3D tours and listing marketing.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About | 3D Interactive Virtual Tours",
     description:
-      "A real estate photography and visual marketing studio built around architectural detail and immersive property presentation.",
+      "Zillow Certified and Google Trusted real estate photography for Winter Haven and Central Florida.",
     url: "/about",
   },
 };
@@ -22,8 +22,8 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        title="We make properties impossible to ignore."
-        copy="A photography and technology studio working with realtors and homeowners across Central Florida."
+        title="A working photographer, not a stock library."
+        copy="Zillow Certified and Google Trusted, shooting listings for realtors and sellers across Winter Haven and Central Florida."
         image={pageHeroes.about.src}
         alt={pageHeroes.about.alt}
       />
@@ -32,23 +32,23 @@ export default function AboutPage() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-16">
           <Reveal className="lg:col-span-5">
             <h2 className="max-w-[16ch] text-display-sm font-medium uppercase text-ivory">
-              A property is only as strong as the way it is presented.
+              Every image on this site is a house we photographed.
             </h2>
           </Reveal>
           <div className="lg:col-span-6 lg:col-start-7">
             <Reveal index={1}>
               <p className="max-w-[60ch] text-base leading-relaxed text-muted md:text-lg">
-                {business.name} is a real estate photography and visual marketing
-                studio. We photograph architecture and interiors, cover properties
-                from the air, and build interactive walkthroughs that let a buyer
-                move through a home before they arrive.
+                {business.name} is run by {business.contactName}, a {business.contactTitle.toLowerCase()}
+                {" "}working out of Winter Haven. The properties here are ordinary
+                Florida listings: three-bedroom homes, pool houses, condos, new
+                construction. They are the listings realtors actually have to sell.
               </p>
               <p className="mt-7 max-w-[60ch] text-base leading-relaxed text-muted md:text-lg">
-                The work exists to do one job. Help realtors market a listing with
-                confidence, and help homeowners present a home the way it deserves
-                to be seen. That means paying attention to the details a camera
-                usually flattens: how a room holds light, how a plan actually flows,
-                how a facade sits in its setting.
+                The offer is deliberately wide. An agent should be able to book one
+                appointment and walk away with the photographs, the aerial coverage,
+                the 3D tour, the dollhouse, the floor plan, the video and the
+                property page, instead of chasing five suppliers and hoping the
+                assets match.
               </p>
             </Reveal>
           </div>
@@ -75,7 +75,7 @@ export default function AboutPage() {
         <ol className="mt-16 grid gap-x-16 gap-y-12 sm:grid-cols-2 lg:mt-20">
           {approach.map((step, i) => (
             <Reveal as="li" key={step.number} index={i} className="border-t border-line pt-7">
-              <p className="text-2xl font-medium tracking-tight text-gold/70">{step.number}</p>
+              <p className="text-2xl font-medium tracking-tight text-gold/80">{step.number}</p>
               <h3 className="mt-5 text-xl font-medium tracking-tight uppercase text-ivory">
                 {step.title}
               </h3>
@@ -88,8 +88,8 @@ export default function AboutPage() {
       </section>
 
       <CTA
-        title="Work with us on your next listing."
-        copy="Photography, aerial coverage and interactive tours, delivered ready to publish."
+        title="Book your next listing."
+        copy="Photography, aerial coverage, 3D tours and video, delivered in 18 hours or the same day."
       />
     </>
   );

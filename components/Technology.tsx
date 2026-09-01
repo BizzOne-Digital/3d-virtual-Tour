@@ -16,17 +16,17 @@ export function Technology() {
             <div className="lg:sticky lg:top-32">
               <Reveal>
                 <h2 className="max-w-[14ch] text-display font-medium uppercase text-ivory">
-                  Turn space into experience.
+                  Walk through one now.
                 </h2>
               </Reveal>
               <Reveal index={1}>
                 <p className="mt-8 max-w-[48ch] text-base leading-relaxed text-muted md:text-lg">
-                  Buyers no longer decide from a set of static photographs. They
-                  want to move through a space, understand its scale and see how
-                  the light falls before they ever step inside.
+                  This is the tour your buyers get: navigable, measured, open on
+                  any phone at any hour. The same capture also produces the
+                  dollhouse view and the floor plan.
                 </p>
                 <p className="mt-6 max-w-[48ch] text-base leading-relaxed text-muted md:text-lg">
-                  These are live tours. Open one and walk through it.
+                  These two are live. Open one and move around inside it.
                 </p>
               </Reveal>
             </div>

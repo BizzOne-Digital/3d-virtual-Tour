@@ -13,17 +13,16 @@ export function Intro() {
         <div className="lg:col-span-6 lg:pt-16 xl:col-span-5">
           <Reveal>
             <h2 className="max-w-[20ch] text-display font-medium uppercase text-ivory">
-              Your property deserves more than a listing.
+              Built for the listings you actually have to sell.
             </h2>
           </Reveal>
 
           <Reveal index={1}>
             <p className="mt-10 max-w-[54ch] text-base leading-relaxed text-muted md:text-lg">
-              {" "}
-              3D Interactive Virtual Tours helps realtors and homeowners present
-              properties through professional photography and immersive digital
-              experiences designed to capture attention and make listings more
-              memorable.
+              We photograph Florida homes for the realtors and sellers marketing
+              them: interiors, exteriors, the lot from the air, a 3D tour a buyer
+              can walk through, a floor plan, a video and a page to put it all on.
+              Captured in one appointment and delivered together.
             </p>
           </Reveal>
         </div>

@@ -1,24 +1,32 @@
 import { Hero } from "@/components/Hero";
 import { Intro } from "@/components/Intro";
-import { FilmBand } from "@/components/FilmBand";
-import { Services } from "@/components/Services";
+import { ServiceCategories } from "@/components/ServiceCategories";
+import { SeeItInAction } from "@/components/SeeItInAction";
 import { Technology } from "@/components/Technology";
+import { FilmBand } from "@/components/FilmBand";
 import { FeaturedProperty } from "@/components/FeaturedProperty";
-import { PortfolioSection } from "@/components/PortfolioSection";
 import { WhyUs } from "@/components/WhyUs";
+import { Credentials } from "@/components/Credentials";
 import { CTA } from "@/components/CTA";
 
+/**
+ * Home reads in the order a realtor decides in:
+ * what we do, see an example, try the live product, why it matters, who we are.
+ * The services overview sits directly under the hero because "where are all my
+ * services" is the first question this page has to answer.
+ */
 export default function HomePage() {
   return (
     <>
       <Hero />
       <Intro />
-      <FilmBand />
-      <Services />
+      <ServiceCategories />
+      <SeeItInAction />
       <Technology />
+      <FilmBand />
       <FeaturedProperty />
-      <PortfolioSection />
       <WhyUs />
+      <Credentials />
       <CTA />
     </>
   );

@@ -20,7 +20,7 @@
   /* Type */
   --color-ivory: #f4f0e8;
   --color-muted: #93a5ba;
-  --color-muted-dim: #6b7f96;
+  --color-muted-dim: #7a90a7;
 
   /* Lines */
   --color-line: #1c2c40;
@@ -107,6 +107,65 @@ body {
   }
   @media (width >= 1280px) {
     padding-inline: 4rem;
+  }
+}
+
+/*
+  Entrance for above-the-fold content.
+
+  Deliberately CSS rather than Motion: a JS-driven `initial: { opacity: 0 }`
+  leaves the hero invisible until React has hydrated, which on a cold cache or
+  a slow phone is long enough to look broken and long enough to hurt LCP. A
+  keyframe runs on the server-rendered markup at first paint instead.
+
+  `both` fill matters: the global reduced-motion block collapses the duration
+  to near zero, and the forwards fill is what leaves the element at its final
+  state rather than stranded at `from`.
+*/
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility rise {
+  animation: rise 0.9s var(--ease-editorial) both;
+}
+
+/*
+  Scroll reveal, CSS-only and progressively enhanced.
+
+  This used to be a Motion component with `initial: { opacity: 0 }`, which
+  server-renders that opacity into the markup. The result was a site whose
+  every section below the hero stayed invisible until React hydrated: blank on
+  a slow phone, blank with JavaScript blocked, and blank for anything that
+  reads the page without executing it.
+
+  So the default state here is *visible*, and the reveal is layered on top only
+  where the browser can drive it from the scroll position itself. Browsers
+  without `animation-timeline` (Safari, Firefox at the time of writing) simply
+  show the content, which is the correct failure mode. Nothing waits on JS.
+
+  `--i` staggers siblings by shifting the scroll range rather than by delaying
+  a clock, so the sequence stays tied to the scroll rather than drifting out of
+  step with it.
+*/
+.reveal {
+  --i: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise 1s linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i) * 7%) entry calc(58% + var(--i) * 7%);
+    }
   }
 }
 

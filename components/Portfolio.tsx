@@ -55,16 +55,29 @@ const FRAMES: Frame[] = [
   },
 ];
 
-function Caption({ project }: { project: Project }) {
+/**
+ * The service leads, not the address. Someone reading this page is deciding
+ * what to commission, so "Virtual Staging" is the useful headline and
+ * "New construction, Central Florida" is the footnote.
+ */
+function Caption({ project, interactive }: { project: Project; interactive?: boolean }) {
   return (
-    <div className="mt-6 border-t border-line pt-5 transition-colors duration-500 group-hover:border-gold/60">
-      <h3 className="text-lg font-medium tracking-tight text-ivory transition-colors duration-300 group-hover:text-gold md:text-xl">
-        {project.property}
+    <div
+      className={`mt-6 border-t border-line pt-5 transition-colors duration-500 ${
+        interactive ? "group-hover:border-gold/60" : ""
+      }`}
+    >
+      <h3
+        className={`text-lg font-medium tracking-tight uppercase text-ivory transition-colors duration-300 md:text-xl ${
+          interactive ? "group-hover:text-gold" : ""
+        }`}
+      >
+        {project.service}
       </h3>
-      <div className="mt-3 flex items-baseline justify-between gap-6">
-        <p className="label text-muted-dim">{project.location}</p>
-        <p className="label text-right text-muted">{project.type}</p>
-      </div>
+      <p className="mt-3 text-sm text-muted">
+        {project.property}, {project.location}
+      </p>
+      <p className="label mt-4 text-muted-dim">{project.result}</p>
     </div>
   );
 }
@@ -99,17 +112,8 @@ export function ProjectFrame({
           sizes={frame.sizes}
           className={aspect}
         />
-        <div className="mt-6 border-t border-line pt-5">
-          <h3 className="text-lg font-medium tracking-tight text-ivory md:text-xl">
-            {project.property}
-          </h3>
-          <div className="mt-3 flex items-baseline justify-between gap-6">
-            <p className="label text-muted-dim">{project.location}</p>
-            <p className="label text-right text-muted">
-              {project.type} <span className="text-muted-dim">{film.duration}</span>
-            </p>
-          </div>
-        </div>
+        <Caption project={project} />
+        <p className="label mt-2 text-muted-dim">Runtime {film.duration}</p>
       </Reveal>
     );
   }
@@ -130,7 +134,7 @@ export function ProjectFrame({
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
           />
         </div>
-        <Caption project={project} />
+        <Caption project={project} interactive />
       </Link>
     </Reveal>
   );

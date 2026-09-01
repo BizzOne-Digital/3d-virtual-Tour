@@ -13,14 +13,14 @@ export function WhyUs() {
           <div className="lg:sticky lg:top-32">
             <Reveal>
               <h2 className="max-w-[12ch] text-display font-medium uppercase text-ivory">
-                More than photography.
+                Why any of it matters.
               </h2>
             </Reveal>
             <Reveal index={1}>
               <p className="mt-8 max-w-[48ch] text-base leading-relaxed text-muted md:text-lg">
-                We combine professional real estate photography with immersive
-                technology to create property marketing experiences that help
-                listings get noticed, understood and remembered.
+                None of this is about pretty pictures. Each asset does a specific
+                job in the sequence between a buyer seeing the listing and a
+                seller signing with you again.
               </p>
             </Reveal>
           </div>
