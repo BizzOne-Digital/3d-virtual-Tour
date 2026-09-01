@@ -17,7 +17,17 @@
  * service carries no price rather than a guess.
  */
 
-export type Photo = { src: string; alt: string };
+import {
+  aerialSelection,
+  cleanupPairs,
+  hdrSelection,
+  key,
+  photographySelection,
+  twilightPair,
+  type Photo,
+} from "./photos";
+
+export type { Photo };
 
 const img = (file: string, alt: string): Photo => ({ src: `/Images/${file}`, alt });
 
@@ -36,6 +46,11 @@ export type Example =
   | { kind: "tour"; slug: string }
   /** A film that plays in place. `film` indexes `films` in content.ts. */
   | { kind: "film"; film: "brand" | "oakwood" | "embry" }
+  /**
+   * A live tour hosted by the platform that runs it, opened in a new tab.
+   * `slug` indexes `experiences` in content.ts.
+   */
+  | { kind: "experience"; slug: "matterport-3d" | "aerial-360" }
   /**
    * The deliverable itself, set as type. For work whose output is a process
    * rather than a picture: publishing a screenshot of a real listing would mean
@@ -84,10 +99,7 @@ export const categories: ServiceCategory[] = [
     name: "Photography",
     intro:
       "The images every other asset is built from. Shot for the way a listing is actually read: small, fast, on a phone.",
-    cover: img(
-      "int-kitchen-coffered.jpg",
-      "Kitchen with a coffered ceiling, granite island and stainless appliances",
-    ),
+    cover: key.kitchen,
     services: [
       {
         id: "real-estate-photography",
@@ -97,17 +109,7 @@ export const categories: ServiceCategory[] = [
         value:
           "Buyers scroll past listings in under a second. Professional coverage is what earns the second look, on the MLS, on Zillow and in the feed.",
         price: "Packages from $155",
-        example: {
-          kind: "gallery",
-          images: [
-            img("int-kitchen-island.jpg", "Kitchen island under pendant lights, open to a dining area"),
-            img("int-living-bright.jpg", "Living room with a wall of windows onto a screened lanai"),
-            img("int-bed-primary.jpg", "Primary bedroom with a tray ceiling and plantation shutters"),
-            img("int-bath-spa.jpg", "Bathroom with a corner soaking tub, double vanity and walk-in shower"),
-            img("ext-ranch-garage.jpg", "Single-storey Florida home with a three-car garage and front lawn"),
-            img("ext-patio-pavers.jpg", "Paver patio with seating under a covered porch and mature planting"),
-          ],
-        },
+        example: { kind: "gallery", images: photographySelection },
       },
       {
         id: "hdr-photography",
@@ -116,19 +118,10 @@ export const categories: ServiceCategory[] = [
           "Several exposures of the same frame, blended by hand so the window keeps its view and the room keeps its detail.",
         value:
           "A camera cannot hold a bright Florida window and a shaded interior in one exposure. HDR is how a room looks the way it looked when you stood in it.",
-        example: {
-          kind: "before-after",
-          before: img(
-            "ex-enhanced-before.jpg",
-            "Kitchen photographed with a heavy colour cast, dark cabinetry and flat window light",
-          ),
-          after: img(
-            "ex-enhanced-after.jpg",
-            "The same kitchen with balanced colour, recovered window detail and even exposure across the room",
-          ),
-          beforeLabel: "Straight out of camera",
-          afterLabel: "Processed",
-        },
+        /* Every frame here is a room shot against its own glass: the pool wall,
+           the lanai sliders, the window over the vanity. That is where the
+           blend does visible work, so that is what the example shows. */
+        example: { kind: "gallery", images: hdrSelection },
       },
       {
         id: "aerial-drone",
@@ -138,11 +131,11 @@ export const categories: ServiceCategory[] = [
         value:
           "In Florida the setting is often the product. Aerial coverage shows the pool, the lake frontage and the community that a ground-level photograph cannot.",
         price: "From $135",
-        example: {
-          kind: "image",
-          image: img("ex-drone.jpg", "Camera drone in flight above a property, framed by palm fronds"),
-          caption: "Licensed drone coverage of the lot, the roofline and the surrounding community.",
-        },
+        alsoIncludes: ["Overhead and oblique coverage", "Lot boundary overlay"],
+        /* Ends on the boundary overlay: the same overhead frame with the lot
+           lines drawn on, which is the one aerial deliverable an agent has to
+           be shown to know it exists. */
+        example: { kind: "gallery", images: aerialSelection },
       },
     ],
   },
@@ -152,7 +145,7 @@ export const categories: ServiceCategory[] = [
     name: "3D and Virtual Tours",
     intro:
       "The part of the listing a buyer can walk through. Open on any phone, at any hour, from anywhere.",
-    cover: img("ex-dollhouse.jpg", "Three-dimensional dollhouse model of a house with the roof removed"),
+    cover: key.living,
     services: [
       {
         id: "interactive-virtual-tours",
@@ -175,14 +168,11 @@ export const categories: ServiceCategory[] = [
         value:
           "A buyer who understands the layout before the showing arrives ready to talk about the house rather than orient themselves in it.",
         price: "Additional $25 per 500 sq ft above 2,500 sq ft",
-        example: {
-          kind: "image",
-          image: img(
-            "ex-matterport-ui.jpg",
-            "Matterport tour interface showing a 3D model of a home with dollhouse, floor plan and view controls",
-          ),
-          caption: "The tour interface: dollhouse, floor plan, measurement and headset views in one place.",
+        proof: {
+          label: "Explore 3D Virtual Tour",
+          href: "https://my.matterport.com/models/jwWfXqk1q8Z?cta_origin=model_listing_results",
         },
+        example: { kind: "experience", slug: "matterport-3d" },
       },
       {
         id: "dollhouse",
@@ -193,12 +183,15 @@ export const categories: ServiceCategory[] = [
           "One image answers the question a gallery of rooms never does: how the house actually fits together.",
         included: true,
         example: {
-          kind: "image",
-          image: img(
-            "ex-dollhouse.jpg",
-            "Dollhouse view of a captured home, roof removed, showing every furnished room and how they connect",
-          ),
-          caption: "Roof off, every room in place. Included with every 3D tour.",
+          kind: "checklist",
+          title: "What the dollhouse gives you",
+          steps: [
+            "The whole house in one 3D model, roof lifted off",
+            "Every room furnished as it was on the day of capture",
+            "Rotate, tilt and zoom to read how the rooms connect",
+            "Click any room to drop into it at floor level",
+            "Generated from the 3D capture, so it costs no extra shoot",
+          ],
         },
       },
       {
@@ -210,16 +203,14 @@ export const categories: ServiceCategory[] = [
           "Room dimensions and flow are the first thing a serious buyer asks for and the last thing most listings provide.",
         included: true,
         example: {
-          kind: "gallery",
-          images: [
-            img(
-              "ex-floorplan-2d.jpg",
-              "Furnished two-storey floor plan with labelled rooms, fixtures and dimensions",
-            ),
-            img(
-              "ex-floorplan-3d.jpg",
-              "Three-dimensional cutaway floor plan showing furniture and room layout from above",
-            ),
+          kind: "checklist",
+          title: "What the plan shows",
+          steps: [
+            "Every floor drawn to scale from the 3D capture",
+            "Rooms labelled and dimensioned",
+            "Fixtures, doors and window positions marked",
+            "Furnished 2D and 3D cutaway versions",
+            "Delivered sized for the MLS and for print",
           ],
         },
       },
@@ -232,12 +223,15 @@ export const categories: ServiceCategory[] = [
           "For relocating and overseas buyers, a headset walkthrough is the closest thing to a showing without a flight.",
         included: true,
         example: {
-          kind: "image",
-          image: img(
-            "ex-vr-headset.jpg",
-            "Virtual reality headset displaying a property interior, captioned walk around, feel it, experience it",
-          ),
-          caption: "Every tour converts to a headset-ready experience at no extra cost.",
+          kind: "checklist",
+          title: "How the headset version works",
+          steps: [
+            "The same capture, converted for VR at no extra cost",
+            "Works on Meta Quest and other standard headsets",
+            "The buyer stands in the room at full scale",
+            "No app to install and no file to send",
+            "Useful for relocating and overseas buyers who cannot fly in",
+          ],
         },
       },
       {
@@ -248,14 +242,11 @@ export const categories: ServiceCategory[] = [
         value:
           "Shows the buyer what is around the house: the lake, the course, the school run, the drive to the interstate.",
         price: "Included in the full package",
-        example: {
-          kind: "image",
-          image: img(
-            "ex-open-house.jpg",
-            "Composite of a drone, a headset and a Florida home advertising a round-the-clock open house",
-          ),
-          caption: "Aerial capture feeding a 360 tour the buyer explores from the air.",
+        proof: {
+          label: "Explore Aerial Tour",
+          href: "https://www.360aerialtours.com/James-Aguilar/470-S-Ramona-Ave-Lake-Alfred.html",
         },
+        example: { kind: "experience", slug: "aerial-360" },
       },
     ],
   },
@@ -265,7 +256,7 @@ export const categories: ServiceCategory[] = [
     name: "Video and Marketing",
     intro:
       "The assets that carry the listing off the MLS and into a feed, an inbox and a shareable link.",
-    cover: img("ex-property-website.jpg", "Single-property website showing photos, video and a contact form"),
+    cover: key.lanai,
     services: [
       {
         id: "property-videos",
@@ -294,14 +285,8 @@ export const categories: ServiceCategory[] = [
         value:
           "The listing markets the property. This markets the agent, on the platforms where the next seller is watching.",
         included: true,
-        example: {
-          kind: "image",
-          image: img(
-            "ex-360-video.jpg",
-            "Thumbnail of a 360 degree walkthrough video of a living room in 4K",
-          ),
-          caption: "Delivered branded for social and unbranded for the MLS, from the same shoot.",
-        },
+        /* The studio film, which is the branded social cut in its own right. */
+        example: { kind: "film", film: "brand" },
       },
       {
         id: "property-website",
@@ -317,12 +302,15 @@ export const categories: ServiceCategory[] = [
           "Sized for Zillow, Realtor.com and social",
         ],
         example: {
-          kind: "image",
-          image: img(
-            "ex-property-website.jpg",
-            "Single-property website with a header video, photo grid, property details and a contact form",
-          ),
-          caption: "A branded address for the listing, and an unbranded one for the MLS.",
+          kind: "checklist",
+          title: "What the page carries",
+          steps: [
+            "Header video and the full photograph gallery",
+            "The 3D tour, the dollhouse and the floor plan embedded",
+            "Property details, features and neighbourhood information",
+            "Enquiry form routed to the agent",
+            "Branded version for marketing, unbranded version for the MLS",
+          ],
         },
       },
     ],
@@ -333,7 +321,7 @@ export const categories: ServiceCategory[] = [
     name: "Property Enhancement",
     intro:
       "What happens to the photographs after the shoot. The difference between a room and a room a buyer can picture themselves in.",
-    cover: img("ex-staging-after.jpg", "Empty living and dining space furnished digitally with a table, sofa and rug"),
+    cover: key.twilight,
     services: [
       {
         id: "virtual-staging",
@@ -344,17 +332,15 @@ export const categories: ServiceCategory[] = [
           "A gallery of empty rooms with white walls loses buyers. Staging lets them see the house furnished without renting a stick of furniture.",
         price: "From $10 per image",
         example: {
-          kind: "before-after",
-          before: img(
-            "ex-staging-before.jpg",
-            "Empty open-plan living and dining room with bare floors, a staircase and sliding doors to the yard",
-          ),
-          after: img(
-            "ex-staging-after.jpg",
-            "The same room digitally furnished with a dining set, sofa, rug, television and artwork",
-          ),
-          beforeLabel: "As photographed",
-          afterLabel: "Virtually staged",
+          kind: "checklist",
+          title: "How a room gets staged",
+          steps: [
+            "You pick the rooms and the style from the delivered photographs",
+            "Furniture matched to the room's scale, light direction and shadows",
+            "Sofas, tables, rugs, artwork and soft furnishing added to the frame",
+            "Staged and unstaged versions of every frame delivered",
+            "Priced per image, so you stage the three rooms that matter",
+          ],
         },
       },
       {
@@ -365,24 +351,55 @@ export const categories: ServiceCategory[] = [
         value:
           "The house shows the way the seller wishes it had looked on the day, without a second appointment, a pressure washer or a sunset callout.",
         included: true,
-        alsoIncludes: [
-          "Blue sky replacement",
-          "Driveway and lawn clean-up",
-          "Minor de-cluttering",
-          "Virtual twilight conversion",
-        ],
+        /* Blue skies, clean-up and twilight each have their own block below.
+           What is left here is the colour and exposure correction that carries
+           no separate name. */
+        alsoIncludes: ["Colour correction", "Exposure balancing", "Lens distortion correction"],
+        /* The second clean-up pair rather than the first: the drive frame is
+           already carrying the de-cluttering block further down, and the aerial
+           shows the correction working across a whole lot rather than one
+           surface. */
         example: {
           kind: "before-after",
-          before: img(
-            "ex-enhanced-before.jpg",
-            "Kitchen with a heavy colour cast, dark flooring and cluttered surfaces",
-          ),
-          after: img(
-            "ex-enhanced-after.jpg",
-            "The same kitchen corrected and cleaned up, with brighter flooring, clear surfaces and balanced light",
-          ),
-          beforeLabel: "Before",
-          afterLabel: "After",
+          before: cleanupPairs[1].before,
+          after: cleanupPairs[1].after,
+          beforeLabel: cleanupPairs[1].beforeLabel,
+          afterLabel: cleanupPairs[1].afterLabel,
+        },
+      },
+      {
+        id: "virtual-twilight",
+        title: "Virtual Twilight",
+        summary:
+          "A daytime exterior taken to dusk: the sky turned, the windows warmed and the landscape lighting brought up.",
+        value:
+          "Twilight frames are the ones buyers stop on, and this one costs no second visit, no waiting on a sunset and no callout after dark.",
+        included: true,
+        example: {
+          kind: "before-after",
+          before: twilightPair.before,
+          after: twilightPair.after,
+          beforeLabel: twilightPair.beforeLabel,
+          afterLabel: twilightPair.afterLabel,
+        },
+      },
+      {
+        id: "decluttering",
+        title: "De-cluttering and Clean-up",
+        summary:
+          "Bins, hoses, cars and clutter taken out of frame, driveways and paving cleaned, tyre marks and stains lifted.",
+        value:
+          "The property shows the way the seller wishes it had looked on the day, without a pressure washer or a second appointment.",
+        included: true,
+        alsoIncludes: ["Blue sky replacement", "Driveway and paving clean-up", "Minor de-cluttering"],
+        /* Both pairs are the studio's own before and after files of the same
+           frame, which is why they sit on a slider rather than side by side. */
+        example: {
+          kind: "before-after",
+          before: cleanupPairs[0].before,
+          after: cleanupPairs[0].after,
+          beforeLabel: cleanupPairs[0].beforeLabel,
+          afterLabel: cleanupPairs[0].afterLabel,
         },
       },
     ],
@@ -393,7 +410,7 @@ export const categories: ServiceCategory[] = [
     name: "Listing Support",
     intro:
       "The unglamorous half of getting a listing live, handled so the agent can be somewhere else.",
-    cover: img("ext-porch-two-story.jpg", "Two-storey Florida home with double front porches and a mature front lawn"),
+    cover: key.entry,
     services: [
       {
         id: "open-house",
@@ -404,11 +421,15 @@ export const categories: ServiceCategory[] = [
           "The house is open every evening and every weekend, including the ones the agent has already committed to another listing.",
         price: "MLS listing setup from $9",
         example: {
-          kind: "image",
-          image: img(
-            "ex-open-house.jpg",
-            "Yard sign outside a Florida home advertising a 24 hour open house with a dedicated property address",
-          ),
+          kind: "checklist",
+          title: "What goes behind the address",
+          steps: [
+            "One address printed on the yard sign and in the listing",
+            "The 3D tour, the video and the photographs behind it",
+            "Open at midnight, on a phone, with nothing to install",
+            "Branded and unbranded versions of the same page",
+            "Live from the moment the listing goes up",
+          ],
         },
       },
       {

@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { films, tours } from "@/lib/content";
+import { experiences, films, tours } from "@/lib/content";
 import type { Example } from "@/lib/services";
 import { BeforeAfter } from "./BeforeAfter";
+import { ExperienceCard } from "./ExperienceCard";
 import { TourEmbed } from "./TourEmbed";
 import { VideoEmbed } from "./VideoEmbed";
 
@@ -65,6 +66,14 @@ export function ServiceExample({
       const tour = tours.find((t) => t.slug === example.slug);
       if (!tour) return null;
       return <TourEmbed tours={[tour]} />;
+    }
+
+    case "experience": {
+      const experience = experiences.find((e) => e.slug === example.slug);
+      if (!experience) return null;
+      return (
+        <ExperienceCard experience={experience} sizes={sizes} priority={priority} />
+      );
     }
 
     case "checklist":

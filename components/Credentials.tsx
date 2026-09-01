@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { business, credentials } from "@/lib/content";
 import { Reveal } from "./Reveal";
 
@@ -8,6 +7,10 @@ import { Reveal } from "./Reveal";
  * Zillow certification and Google Trusted status are worth stating once, at
  * the size a professional states them. Blown up into a banner they stop
  * reading as credentials and start reading as compensation.
+ *
+ * They are set as type rather than as the supplied badge lockup image, because
+ * the only imagery this site carries is the studio's own property photography.
+ * The certifications are claims, and a claim reads perfectly well as a word.
  */
 export function Credentials() {
   return (
@@ -20,16 +23,16 @@ export function Credentials() {
           <p className="mt-3 max-w-[34ch] text-sm leading-relaxed text-muted">
             {business.contactTitle}
           </p>
-          <div className="relative mt-8 h-14 w-[13rem]">
-            <Image
-              src={credentials.badge.src}
-              alt={credentials.badge.alt}
-              fill
-              loading="lazy"
-              sizes="208px"
-              className="object-contain object-left"
-            />
-          </div>
+          <ul className="mt-8 flex flex-wrap gap-x-3 gap-y-2">
+            {credentials.marks.map((mark) => (
+              <li
+                key={mark}
+                className="label rounded-full border border-gold/40 px-4 py-2 text-gold"
+              >
+                {mark}
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         <Reveal index={1} className="lg:col-span-6 lg:col-start-7">

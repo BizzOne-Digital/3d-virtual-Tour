@@ -3,6 +3,8 @@ import { PageHero } from "@/components/PageHero";
 import { PortfolioGrid } from "@/components/Portfolio";
 import { CTA } from "@/components/CTA";
 import { CoverageGallery } from "@/components/CoverageGallery";
+import { InteractiveExperiences } from "@/components/InteractiveExperiences";
+import { RetouchGallery } from "@/components/RetouchGallery";
 import { pageHeroes } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -31,6 +33,14 @@ export default function PortfolioPage() {
       <section className="shell border-t border-line py-24 md:py-32">
         <PortfolioGrid />
       </section>
+
+      <InteractiveExperiences
+        label="Interactive experiences"
+        title="Tours you can open now."
+        copy="Two published tours of Florida properties. The 3D walkthrough runs on Matterport, the aerial tour on 360aerialtours.com, and both open in a new tab."
+      />
+
+      <RetouchGallery />
 
       <CoverageGallery />
 

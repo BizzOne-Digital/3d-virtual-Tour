@@ -55,6 +55,14 @@ whichever way suits it without any layout work:
 | `tour` | A live interactive tour, running in the page |
 | `film` | A YouTube facade that plays in place |
 | `checklist` | The deliverable set as type, for process work |
+| `experience` | A card opening a live tour on its host platform, in a new tab |
+
+The two live tours (`experiences` in `lib/content.ts`) are the Matterport 3D
+walkthrough and the 360 aerial tour of 470 S Ramona Ave, Lake Alfred. They open
+in a new tab rather than in an iframe: both hosts put the viewer through their
+own loader and neither is served for embedding at the URL the studio hands out,
+so an inline frame risks rendering a challenge page. They appear on the home
+page, the services page (on `matterport` and `aerial-360`) and the portfolio.
 
 `pricing` at the bottom of the same file holds the published rates. Every figure
 appears exactly once.
@@ -79,10 +87,30 @@ client? If not, it does not belong here, however good it looks.
 
 ## Media
 
-All photography lives in `public/Images` and is referenced from `lib/content.ts`
-and `lib/services.ts` through the `photo()` and `img()` helpers. Nothing is
-loaded from a remote host. Filenames carry their role, so a placement is
-findable by grep:
+All photography lives in `public/Images`. The studio's delivered shoot sits in
+seven folders there, and **`lib/photos.ts` is the single mapping from those
+folders to the services they illustrate** — read the header comment in that file
+first, it documents what each folder is and which pairs go together. Everything
+else (`lib/content.ts`, `lib/services.ts`) imports from it rather than naming
+paths, so re-illustrating a service is a one-line edit.
+
+| Folder | Contents | Renders as |
+| --- | --- | --- |
+| `HDR/` | 38 bracketed interiors | Real Estate Photography, HDR Photography, coverage index |
+| `Exterior/` | 43 exteriors | Real Estate Photography, coverage index, page heroes |
+| `Aerial/` | 6 drone frames | Aerial and Drone Photography |
+| `Aerial Cleanup/` | the same 6, retouched | De-cluttering sliders (the "after") |
+| `Exterior Cleanup/` | 7 exteriors, retouched | De-cluttering sliders (the "after") |
+| `Twilight/` | `Aerial (3)` taken to dusk | Virtual Twilight slider (the "after") |
+| `Aerial Borderline/` | `Aerial (1)` with lot lines | Aerial gallery, homepage proof strip |
+
+Paths in `lib/photos.ts` are left **unencoded**: the folders contain spaces and
+the filenames contain parentheses, and `next/image` encodes `src` itself when it
+builds the optimiser URL. Pre-encoding sends `%2520` to the server and 404s.
+
+The loose files at the root of `public/Images` are the studio's own service
+graphics and poster stills. Nothing is loaded from a remote host. Filenames
+carry their role, so a placement is findable by grep:
 
 | Prefix | Contents |
 | --- | --- |
@@ -130,14 +158,20 @@ Two things to know about the file:
   ffmpeg -i public/Images/hero.mp4 -t 8 -b:v 3M -an -movflags +faststart public/Images/hero-small.mp4
   ```
 
-**3. Two before/after pairs are genuine, one service still needs one.** The
-virtual staging slider is two frames of the same room from the studio's own
-staging sample, and the enhancement slider is a real correction pair. Virtual
-twilight is listed and priced but shares the enhancement example rather than
-having its own, because no usable twilight pair exists in the current material.
-A daytime exterior and its twilight conversion, same frame, would complete it:
-add them as a `before-after` example on the `photo-enhancement` service, or
-split twilight into its own service object.
+**3. The before/after pairs are genuine.** Every slider on the site puts two
+files of the *same frame at the same crop* against each other: the staging
+sample, the correction pair, the twilight conversion
+(`Aerial/Aerial (3).jpg` -> `Twilight/Aerial (3).jpg`) and the nine clean-up
+pairs, which match their originals by filename across `Exterior` /
+`Exterior Cleanup` and `Aerial` / `Aerial Cleanup`.
+
+Four delivered clean-up files are **pixel-identical to their originals** and are
+deliberately not shown as comparisons, because a slider that reveals nothing is
+worse than no slider: `Exterior Cleanup/Exterior (44).jpg`,
+`Exterior Cleanup/Exterior (46).jpg`, `Aerial Cleanup/Aerial (5).jpg` and
+`Aerial Cleanup/Aerial (6).jpg`. Their originals still render in full in the
+coverage index. If corrected versions of those four arrive, drop them in under
+the same names and add them to `cleanupPairs` in `lib/photos.ts`.
 
 ## One thing to do before launch
 

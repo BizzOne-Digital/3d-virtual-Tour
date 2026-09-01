@@ -118,6 +118,11 @@ export function ProjectFrame({
     );
   }
 
+  /* A still entry with no frame would render an empty box. There are none in
+     the catalogue, but the type allows it for film entries, so guard rather
+     than trust. */
+  if (!project.image || !project.alt) return null;
+
   return (
     <Reveal
       as="article"

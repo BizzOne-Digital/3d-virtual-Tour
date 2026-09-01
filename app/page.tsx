@@ -3,6 +3,7 @@ import { Intro } from "@/components/Intro";
 import { ServiceCategories } from "@/components/ServiceCategories";
 import { SeeItInAction } from "@/components/SeeItInAction";
 import { Technology } from "@/components/Technology";
+import { InteractiveExperiences } from "@/components/InteractiveExperiences";
 import { FilmBand } from "@/components/FilmBand";
 import { FeaturedProperty } from "@/components/FeaturedProperty";
 import { WhyUs } from "@/components/WhyUs";
@@ -23,6 +24,7 @@ export default function HomePage() {
       <ServiceCategories />
       <SeeItInAction />
       <Technology />
+      <InteractiveExperiences />
       <FilmBand />
       <FeaturedProperty />
       <WhyUs />

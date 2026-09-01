@@ -11,6 +11,19 @@
  * what this studio does for a client does not belong on this site.
  */
 
+import {
+  aerialGroup,
+  cleanupPairs,
+  exteriorGroups,
+  hdrSelection,
+  interiorGroups,
+  key,
+  twilightPair,
+} from "./photos";
+
+/** The retouched frame from the lead clean-up pair. */
+const cleanupAfter = cleanupPairs[0].after;
+
 export const business = {
   name: "3D Interactive Virtual Tours",
   shortName: "3D IVT",
@@ -41,12 +54,15 @@ export const cta = {
   portfolio: { label: "View Examples", href: "/portfolio" },
 } as const;
 
-/** Credentials, stated plainly. Not a banner. */
+/**
+ * Credentials, stated plainly. Not a banner.
+ *
+ * `marks` replaces the supplied Zillow/Google badge lockup: the site carries
+ * only the studio's own property photography, and a certification reads as
+ * well set in type as it does as a logo.
+ */
 export const credentials = {
-  badge: {
-    src: "/Images/badge-zillow-google.jpg",
-    alt: "Zillow Certified Photographer and Google Street View Trusted Photographer badges",
-  },
+  marks: ["Zillow Certified", "Google Street View Trusted"],
   claims: [
     "Zillow Certified Photographer",
     "Google Street View Trusted",
@@ -154,10 +170,63 @@ export const tours: Tour[] = [
   },
 ];
 
-export const introImage = {
-  src: photo("ext-pool-palms.jpg"),
-  alt: "Screened pool and spa behind a Florida home, framed by palms and tropical planting",
+/**
+ * The two interactive experiences the studio publishes for a real Florida
+ * listing, hosted by the platforms that run them.
+ *
+ * These open in a new tab rather than in an iframe. Both providers put the
+ * viewer through their own loader, and neither is served for embedding at the
+ * URL the studio hands out, so a card that opens the real thing is both more
+ * honest and cheaper than an inline frame that may render a challenge page.
+ * The poster is the studio's own photography of a Florida property, and the
+ * card says which platform it opens, so nothing here implies the frame is the
+ * tour.
+ */
+export type Experience = {
+  slug: "matterport-3d" | "aerial-360";
+  /** Small type above the title. Names the discipline. */
+  kicker: string;
+  title: string;
+  /** What the viewer gets when they open it. */
+  copy: string;
+  /** The platform running it, stated plainly on the card. */
+  platform: string;
+  /** Where the tour actually is. Opened in a new tab, unmodified. */
+  url: string;
+  ctaLabel: string;
+  poster: string;
+  posterAlt: string;
+  /** Address, where the studio publishes one for the tour. */
+  location?: string;
 };
+
+export const experiences: Experience[] = [
+  {
+    slug: "matterport-3d",
+    kicker: "3D Interactive Virtual Tour",
+    title: "Walk the property in 3D",
+    copy: "A measured 3D capture the buyer moves through room by room, with the dollhouse and floor-plan views alongside it. Open on a phone, a laptop or a headset, at any hour.",
+    platform: "Matterport",
+    url: "https://my.matterport.com/models/jwWfXqk1q8Z?cta_origin=model_listing_results",
+    ctaLabel: "Explore 3D Virtual Tour",
+    poster: interiorGroups[1].images[1].src,
+    posterAlt: interiorGroups[1].images[1].alt,
+  },
+  {
+    slug: "aerial-360",
+    kicker: "360 Interactive Aerial Virtual Tour",
+    title: "See the whole property from above",
+    copy: "An interactive aerial position over the property that pans, tilts and zooms, so a buyer can read the lot, the roofline, the street and everything around it.",
+    platform: "360aerialtours.com",
+    location: "470 S Ramona Ave, Lake Alfred",
+    url: "https://www.360aerialtours.com/James-Aguilar/470-S-Ramona-Ave-Lake-Alfred.html",
+    ctaLabel: "Explore Aerial Tour",
+    poster: key.overhead.src,
+    posterAlt: key.overhead.alt,
+  },
+];
+
+export const introImage = key.entry;
 
 /**
  * Homepage proof strip. One frame per discipline, so the section answers
@@ -179,48 +248,56 @@ export const proofs: Proof[] = [
   {
     service: "Real Estate Photography",
     caption: "Interior and exterior coverage of the whole property",
-    image: photo("int-kitchen-coffered.jpg"),
-    alt: "Kitchen with a coffered ceiling, granite island and stainless appliances",
+    image: key.kitchen.src,
+    alt: key.kitchen.alt,
     href: "/services#real-estate-photography",
   },
   {
-    service: "3D Dollhouse",
-    caption: "The whole house from above, roof removed",
-    image: photo("ex-dollhouse.jpg"),
-    alt: "Dollhouse view of a captured home showing every furnished room and how they connect",
-    href: "/services#dollhouse",
+    service: "HDR Photography",
+    caption: "Windows that keep their view, rooms that keep their detail",
+    image: hdrSelection[0].src,
+    alt: hdrSelection[0].alt,
+    href: "/services#hdr-photography",
     aspect: "aspect-16/9",
   },
   {
     service: "Aerial and Drone",
     caption: "The lot, the water and the community from the air",
-    image: photo("ex-drone.jpg"),
-    alt: "Camera drone in flight above a property, framed by palm fronds",
+    image: key.overhead.src,
+    alt: key.overhead.alt,
     href: "/services#aerial-drone",
   },
   {
-    service: "2D Floor Plans",
-    caption: "Every room labelled and dimensioned",
-    image: photo("ex-floorplan-2d.jpg"),
-    alt: "Furnished floor plan with labelled rooms, fixtures and dimensions",
-    href: "/services#floor-plans",
+    service: "Outdoor Living",
+    caption: "The pool, the lanai and the summer kitchen",
+    image: key.pool.src,
+    alt: key.pool.alt,
+    href: "/services#real-estate-photography",
     aspect: "aspect-4/5",
   },
   {
-    service: "Single Property Website",
-    caption: "One address carrying every asset",
-    image: photo("ex-property-website.jpg"),
-    alt: "Single-property website with a header video, photo grid, property details and contact form",
-    href: "/services#property-website",
+    service: "De-cluttering and Clean-up",
+    caption: "Drives and paving cleaned after the shoot",
+    image: cleanupAfter.src,
+    alt: cleanupAfter.alt,
+    href: "/services#decluttering",
     aspect: "aspect-4/5",
   },
   {
-    service: "3D Matterport Tours",
-    caption: "Dollhouse, floor plan and headset views in one interface",
-    image: photo("ex-matterport-ui.jpg"),
-    alt: "Matterport tour interface showing a 3D model of a home with navigation controls",
-    href: "/services#matterport",
-    aspect: "aspect-16/9",
+    service: "Virtual Twilight",
+    caption: "A midday exterior taken to dusk, lights on",
+    image: key.twilight.src,
+    alt: key.twilight.alt,
+    href: "/services#virtual-twilight",
+    aspect: "aspect-3/2",
+  },
+  {
+    service: "Lot Line Overlay",
+    caption: "The boundary drawn on the overhead frame",
+    image: key.lotLines.src,
+    alt: key.lotLines.alt,
+    href: "/services#aerial-drone",
+    aspect: "aspect-3/2",
   },
 ];
 
@@ -237,8 +314,8 @@ export const featuredProperty = {
   location: "Winter Haven, Polk County",
   discipline: "In 18 hours, or the same day",
   ctaLabel: "See the full service list",
-  image: photo("ext-backyard-lanai.jpg"),
-  alt: "Rear of a Florida home with a covered lanai, lawn and flowering shrubs under an open sky",
+  image: key.pool.src,
+  alt: key.pool.alt,
 };
 
 /**
@@ -253,8 +330,9 @@ export type Project = {
   location: string;
   /** What the client actually received. */
   result: string;
-  image: string;
-  alt: string;
+  /** Required for stills. Film entries play in place and carry no frame. */
+  image?: string;
+  alt?: string;
   /** "film" entries play in place; the default is a still frame. */
   kind?: "photo" | "film";
   film?: keyof typeof films;
@@ -272,8 +350,6 @@ export const portfolio: Project[] = [
     kind: "film",
     film: "oakwood",
     aspect: "aspect-16/9",
-    image: photo("film-oakwood.jpg"),
-    alt: "Opening frame of the listing film for 23 Oakwood Road, Winter Haven",
   },
   {
     slug: "interior-photography",
@@ -281,26 +357,26 @@ export const portfolio: Project[] = [
     property: "Family home",
     location: "Polk County",
     result: "50 HDR frames, delivered next morning",
-    image: photo("int-living-fireplace.jpg"),
-    alt: "Living room with a corner fireplace, sectional sofa and tiled floor",
+    image: key.living.src,
+    alt: key.living.alt,
   },
   {
-    slug: "virtual-staging",
-    service: "Virtual Staging",
-    property: "New construction",
-    location: "Central Florida",
-    result: "Empty rooms furnished digitally",
-    image: photo("ex-staging-after.jpg"),
-    alt: "Open-plan living and dining room furnished digitally with a dining set, sofa and rug",
+    slug: "outdoor-living",
+    service: "Outdoor Living Coverage",
+    property: "Pool home",
+    location: "Polk County",
+    result: "Pool, spa, lanai and summer kitchen",
+    image: key.pool.src,
+    alt: key.pool.alt,
   },
   {
-    slug: "dollhouse-model",
-    service: "3D Dollhouse",
-    property: "Four-bedroom home",
-    location: "Central Florida",
-    result: "Full 3D model with roof removed",
-    image: photo("ex-dollhouse.jpg"),
-    alt: "Dollhouse view of a captured home showing every furnished room and how they connect",
+    slug: "lot-lines",
+    service: "Lot Line Overlay",
+    property: "Cul-de-sac lot",
+    location: "Polk County",
+    result: "Boundary drawn on the overhead frame",
+    image: key.lotLines.src,
+    alt: key.lotLines.alt,
     aspect: "aspect-16/9",
   },
   {
@@ -312,17 +388,15 @@ export const portfolio: Project[] = [
     kind: "film",
     film: "embry",
     aspect: "aspect-16/9",
-    image: photo("film-embry.jpg"),
-    alt: "Opening frame of the listing film for 2112 Embry Avenue, Haines City",
   },
   {
-    slug: "floor-plan",
-    service: "2D Floor Plan",
-    property: "Two-storey home",
-    location: "Central Florida",
-    result: "Labelled plan for both floors",
-    image: photo("ex-floorplan-2d.jpg"),
-    alt: "Furnished two-storey floor plan with labelled rooms, fixtures and dimensions",
+    slug: "decluttering",
+    service: "De-cluttering and Clean-up",
+    property: "Paver driveway",
+    location: "Polk County",
+    result: "Staining and marks lifted in post",
+    image: cleanupAfter.src,
+    alt: cleanupAfter.alt,
     aspect: "aspect-4/5",
   },
   {
@@ -332,8 +406,18 @@ export const portfolio: Project[] = [
     location: "Polk County",
     result: "Ground and aerial coverage of the lot",
     aspect: "aspect-21/9",
-    image: photo("ext-ranch-garage.jpg"),
-    alt: "Single-storey Florida home with a three-car garage, palm and front lawn on a clear day",
+    image: aerialGroup.images[1].src,
+    alt: aerialGroup.images[1].alt,
+  },
+  {
+    slug: "virtual-twilight",
+    service: "Virtual Twilight",
+    property: "Single-storey home",
+    location: "Polk County",
+    result: "Midday aerial converted to dusk",
+    image: twilightPair.after.src,
+    alt: twilightPair.after.alt,
+    aspect: "aspect-3/2",
   },
 ];
 
@@ -346,64 +430,20 @@ export const portfolio: Project[] = [
  */
 export const coverage = {
   title: "What full coverage looks like",
-  copy: "A standard shoot returns around fifty frames. Not fifty angles of the front elevation: every room a buyer will ask about, shot so the listing does not run out of answers.",
-  groups: [
-    {
-      room: "Kitchens and dining",
-      images: [
-        { src: photo("int-kitchen-clock.jpg"), alt: "Kitchen with a granite island, breakfast bar and stainless double oven" },
-        { src: photo("int-kitchen-red.jpg"), alt: "Kitchen and eating area with timber cabinetry and a tiled floor" },
-        { src: photo("int-kitchen-white.jpg"), alt: "White kitchen with a central island, breakfast stools and skylight" },
-        { src: photo("int-dining-formal.jpg"), alt: "Formal dining room with a tray ceiling, chandelier and plantation shutters" },
-      ],
-    },
-    {
-      room: "Living spaces",
-      images: [
-        { src: photo("int-living-formal.jpg"), alt: "Two-storey living room with an arched window, chandelier and staircase" },
-        { src: photo("int-living-neutral.jpg"), alt: "Living room with a fireplace, sectional sofa and view through to the entry" },
-        { src: photo("int-living-sunroom.jpg"), alt: "Sun room with wicker seating, a media wall and windows on three sides" },
-      ],
-    },
-    {
-      room: "Bedrooms",
-      images: [
-        { src: photo("int-bed-fan.jpg"), alt: "Primary bedroom with a timber bed frame, ceiling fan and wood floor" },
-        { src: photo("int-bed-guest.jpg"), alt: "Guest bedroom with a white bed, armchair and plantation shutters" },
-        { src: photo("int-bed-pastel.jpg"), alt: "Bedroom with pale walls, a ceiling fan and shuttered windows" },
-        { src: photo("int-bed-kids.jpg"), alt: "Child's bedroom with a canopy bed, dressing table and pink walls" },
-        { src: photo("int-bed-boys.jpg"), alt: "Child's bedroom with a single bed, shutters and a desk area" },
-      ],
-    },
-    {
-      room: "Bathrooms",
-      images: [
-        { src: photo("int-bath-double.jpg"), alt: "Bathroom with a corner tub, walk-in shower and double vanity" },
-        { src: photo("int-bath-tub.jpg"), alt: "Bathroom with a garden tub, glass shower and tiled surround" },
-        { src: photo("int-bath-vanity.jpg"), alt: "Bathroom vanity in granite with a mirror and view through to the bedroom" },
-      ],
-    },
-  ],
+  copy: "One property, one appointment, every frame delivered. Not fifty angles of the front elevation: every room and every corner of the lot a buyer will ask about, shot so the listing does not run out of answers.",
+  /* The whole shoot, straight off the folders in public/Images: the HDR
+     interiors room by room, the exteriors in the order a visitor arrives, and
+     the aerial coverage last. The argument this section makes is completeness,
+     which a curated selection cannot make on its own behalf. */
+  groups: [...interiorGroups, ...exteriorGroups, aerialGroup],
 };
 
 /** Page hero photography. Studio work only. */
 export const pageHeroes = {
-  services: {
-    src: photo("int-living-bright.jpg"),
-    alt: "Living room with a wall of windows looking onto a screened lanai and garden",
-  },
-  about: {
-    src: photo("ext-colonial-porch.jpg"),
-    alt: "Two-storey home with a covered front porch and dormer windows behind mature trees",
-  },
-  aboutBand: {
-    src: photo("ext-patio-pavers.jpg"),
-    alt: "Paver patio with seating under a covered porch and mature tropical planting",
-  },
-  portfolio: {
-    src: photo("int-dining-shutters.jpg"),
-    alt: "Dining room with plantation shutters, a long table and polished tile floor",
-  },
+  services: key.living,
+  about: key.elevation,
+  aboutBand: key.lanai,
+  portfolio: key.dining,
 };
 
 export const valueProps = [

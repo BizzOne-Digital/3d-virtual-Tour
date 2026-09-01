@@ -7,8 +7,13 @@ import { BeforeAfter } from "./BeforeAfter";
 import { SectionLabel } from "./SectionLabel";
 import { Reveal } from "./Reveal";
 
-/** The two services whose whole value is the change they make to a frame. */
-const SLIDERS = ["virtual-staging", "photo-enhancement"] as const;
+/**
+ * The two services whose whole value is the change they make to a frame.
+ * Twilight leads over the general enhancement block because both sides of that
+ * pair are the studio's own files of the same frame, so the drag shows a real
+ * conversion rather than a correction you have to be told about.
+ */
+const SLIDERS = ["virtual-staging", "virtual-twilight"] as const;
 
 function slider(id: string) {
   const service = categories
