@@ -71,6 +71,50 @@ export const credentials = {
   ],
 } as const;
 
+/**
+ * The client logo wall.
+ *
+ * `file` resolves against `/brands/trimmed/`. The trimmed set is generated from
+ * the originals in `/brands/` by cropping each file to its alpha bounding box,
+ * because the supplied artwork carries wildly uneven transparent margins -
+ * kw.png was 88% padding, canes.png 22%. Padding is invisible but it is not
+ * free: it sets the box the logo occupies, so untrimmed files give markup with
+ * even spacing and a row with visibly uneven gaps. Originals are kept;
+ * regenerate the trimmed set from them if a logo is replaced.
+ *
+ * `w`/`h` are the trimmed pixel dimensions, which `next/image` needs to reserve
+ * space and pick a srcset.
+ *
+ * `fit` is the logo's height as a fraction of the chip diameter, and it is not
+ * eyeballed. A rectangle w x h fits inside a circle of diameter D when its
+ * diagonal does, so `fit = 0.8 / sqrt(r^2 + 1)` where r is the aspect ratio.
+ * Every logo therefore inscribes the same diagonal at 80% of the chip, leaving
+ * an even ring of space: a round badge lands near 56% of the diameter, a long
+ * wordmark near 13% tall and 79% wide. That is one rule rather than ten
+ * hand-tuned numbers, so a replacement logo only needs its ratio.
+ *
+ * Two files are named after the wrong thing: `rice.png` is Chick-fil-A and
+ * `bongales.png` is Bojangles. `name` is what the page and the alt text use.
+ *
+ * `rice-red.png` is a derived file. The supplied Chick-fil-A artwork is a white
+ * knockout built for dark grounds - 1.1:1 against the ivory chip, which is
+ * invisible - so its alpha was kept and the brand red put back into the RGB.
+ * The white original is still in `/brands/` if a dark treatment is ever wanted.
+ */
+export type Client = { name: string; file: string; w: number; h: number; fit: number };
+
+export const clients: Client[] = [
+  { name: "Keller Williams", file: "kw.png", w: 189, h: 130, fit: 0.453 },
+  { name: "Airbnb", file: "airbnb.png", w: 625, h: 199, fit: 0.243 },
+  { name: "Ashton Woods", file: "ashton.png", w: 402, h: 119, fit: 0.227 },
+  { name: "Starbucks", file: "starbucks.png", w: 392, h: 389, fit: 0.564 },
+  { name: "Choice Hotels", file: "choice_hotels.png", w: 503, h: 127, fit: 0.196 },
+  { name: "Raising Cane's", file: "canes.png", w: 635, h: 306, fit: 0.347 },
+  { name: "Apartments.com", file: "apartments.png", w: 166, h: 27, fit: 0.128 },
+  { name: "Chick-fil-A", file: "rice-red.png", w: 639, h: 288, fit: 0.329 },
+  { name: "PDQ", file: "pdq.png", w: 370, h: 197, fit: 0.376 },
+  { name: "Bojangles", file: "bongales.png", w: 403, h: 263, fit: 0.437 },
+];
 const photo = (file: string) => `/Images/${file}`;
 
 /**

@@ -7,6 +7,7 @@ import { InteractiveExperiences } from "@/components/InteractiveExperiences";
 import { FilmBand } from "@/components/FilmBand";
 import { FeaturedProperty } from "@/components/FeaturedProperty";
 import { WhyUs } from "@/components/WhyUs";
+import { Clients } from "@/components/Clients";
 import { Credentials } from "@/components/Credentials";
 import { CTA } from "@/components/CTA";
 
@@ -28,6 +29,7 @@ export default function HomePage() {
       <FilmBand />
       <FeaturedProperty />
       <WhyUs />
+      <Clients />
       <Credentials />
       <CTA />
     </>

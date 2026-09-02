@@ -43,8 +43,10 @@ export function ServiceExample({
 
     case "image":
       return (
-        <figure>
-          <div className="relative aspect-3/2 overflow-hidden rounded-image bg-surface">
+        <figure className={example.maxWidth}>
+          <div
+            className={`relative overflow-hidden rounded-image bg-surface ${example.aspect ?? "aspect-3/2"}`}
+          >
             <Image
               src={example.image.src}
               alt={example.image.alt}

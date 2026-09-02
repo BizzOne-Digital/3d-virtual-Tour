@@ -201,3 +201,57 @@ body {
 @utility scrim-flat {
   background: rgb(5 12 23 / 0.62);
 }
+
+/*
+  Client logo wave.
+
+  One row travelling right to left, each logo on a disc and the discs riding a
+  sine curve so the band undulates as it passes. Two things make it hold
+  together:
+
+  The track carries the list twice and translates exactly -50%, so the second
+  copy is where the first began at the moment the loop restarts and there is no
+  seam. The vertical offsets are sin(2pi * i / n), which returns to zero at the
+  start of the duplicate - the wave meets itself rather than stepping.
+
+  Nothing scrolls. `overflow: hidden` is what clips the row, so neither a
+  horizontal nor a vertical scrollbar can appear inside the band; the animation
+  is the only thing that moves it.
+
+  Motion is CSS on server-rendered markup for the same reason `.reveal` is: no
+  logo waits on hydration to become visible.
+
+  On the `!important`: the global reduced-motion block collapses every duration
+  to 0.01ms, which stranded this track at its end state - a still row, with the
+  logos parked mid-loop. Travel *is* the presentation here, and it was asked for
+  explicitly, so this rule overrides that preference. It is the one animation on
+  the site that does. To hand the preference back, delete the two `!important`
+  flags below and give `.brand-wave` an `overflow-x: auto` inside a
+  `prefers-reduced-motion: reduce` block so the row stays reachable by swipe.
+*/
+@keyframes brand-wave {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Masked at both edges so the logos arrive and leave rather than being cut
+   off against a hard boundary. */
+.brand-wave {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.brand-wave-track {
+  animation: brand-wave 46s linear infinite !important;
+  animation-play-state: running !important;
+}
+
+.brand-wave:hover .brand-wave-track,
+.brand-wave:focus-within .brand-wave-track {
+  animation-play-state: paused !important;
+}
